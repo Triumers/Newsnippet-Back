@@ -81,6 +81,7 @@ public class ManageServiceImpl implements ManageService {
         CrawlingQuizDTO selectedQuiz = selectCrawlingQuizByID(id);
         Quiz insertQuiz = mapper.map(selectedQuiz, Quiz.class);
 
+        insertQuiz.setId(null);
         insertQuiz.setNo(getMaxNo() + 1);
         insertQuiz.setDate(nextDate);
         insertQuiz.setCategoryId(selectedQuiz.getCategory().getId());
