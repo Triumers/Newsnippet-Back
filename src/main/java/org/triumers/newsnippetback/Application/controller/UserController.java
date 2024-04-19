@@ -11,8 +11,12 @@ import org.triumers.newsnippetback.Application.service.UserService;
 import org.triumers.newsnippetback.common.exception.UserNotFoundException;
 import org.triumers.newsnippetback.domain.aggregate.enums.UserRole;
 import org.triumers.newsnippetback.domain.aggregate.enums.UserStatus;
+import org.triumers.newsnippetback.domain.aggregate.vo.ResponseLeagueVO;
 import org.triumers.newsnippetback.domain.aggregate.vo.ResponseUserInfoVO;
 import org.triumers.newsnippetback.Application.dto.UserDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -85,6 +89,32 @@ public class UserController {
             response.setMessage(e.getMessage());
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @GetMapping("/league")
+    public ResponseEntity<ResponseLeagueVO> findLeague() {
+
+        ResponseLeagueVO response = new ResponseLeagueVO();
+        try {
+            List<UserDTO> userDTOs = userService.findLeague();
+            List<ResponseLeagueVO.Ranker> rankers = new ArrayList<>();
+
+            int rank = 1;
+
+            for (UserDTO user : userDTOs) {
+                rankers.add(new ResponseLeagueVO.Ranker(rank, user.getNickname(), user.getCorrectCnt()));
+                rank++;
+            }
+
+            response.setRankers(rankers);
+            response.setMessage("조회 성공");
+
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (UserNotFoundException e) {
+            response.setMessage("[Error] 조회 실패");
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
