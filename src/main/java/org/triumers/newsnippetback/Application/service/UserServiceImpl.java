@@ -8,6 +8,9 @@ import org.triumers.newsnippetback.domain.aggregate.entity.User;
 import org.triumers.newsnippetback.Application.dto.UserDTO;
 import org.triumers.newsnippetback.domain.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -45,6 +48,18 @@ public class UserServiceImpl implements UserService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         return findUserByEmail(email);
+    }
+
+    @Override
+    public List<UserDTO> findLeague() throws UserNotFoundException {
+        List<User> users = userRepository.findLeague();
+        List<UserDTO> userDTOs = new ArrayList<>();
+
+        for (User user : users) {
+            userDTOs.add(userToUserDTO(user));
+        }
+
+        return userDTOs;
     }
 
     private UserDTO userToUserDTO(User user) throws UserNotFoundException {
