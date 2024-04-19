@@ -22,11 +22,15 @@ class UserServiceImplTest {
     @DisplayName("리그 테스트")
     @Test
     void findLeague() throws UserNotFoundException {
-        List<UserDTO> userDTOs = userService.findLeague();
 
+        // given
+        List<UserDTO> userDTOs = userService.findLeague();
         int beforeCorrectCnt = userDTOs.get(0).getCorrectCnt();
 
+        // when
         for (UserDTO user : userDTOs) {
+
+            // then
             assertTrue(user.getCorrectCnt() <= beforeCorrectCnt);
             beforeCorrectCnt = user.getCorrectCnt();
         }
